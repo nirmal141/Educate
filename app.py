@@ -8,27 +8,34 @@ def main():
     # Initialize LLM
     llm = LocalLLM(device="npu")
     
-    # Simple subject selection
+    # Add grade selection
+    grade = st.selectbox(
+        "Select Grade:",
+        ["1st Grade", "2nd Grade", "3rd Grade", "4th Grade", "5th Grade",
+         "6th Grade", "7th Grade", "8th Grade", "9th Grade", "10th Grade"]
+    )
+    
+    # Rest of the selections
     subject = st.selectbox(
         "Choose Subject:",
         ["Mathematics", "Science", "Language"]
     )
     
-    # Mode selection
     mode = st.radio(
         "Choose Mode:",
         ["Learn Concept", "Practice Questions", "Get Explanation"]
     )
     
-    # User input
     user_input = st.text_area("Enter your question or topic:")
     
     if st.button("Generate"):
         prompt = EDUCATIONAL_PROMPTS[mode].format(
             subject=subject,
-            topic=user_input
+            topic=user_input,
+            grade=grade
         )
         
+        # Remove subject parameter as it's not defined in the generate method
         response = llm.generate(prompt)
         st.write(response)
 
